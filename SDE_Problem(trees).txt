@@ -1,0 +1,159 @@
+1) LEFT VIEW OF BINARY TREE
+ leftview(Node* root){
+if(root==NULL)return ;
+queue<Node*> q;
+q.push(root);
+q.push(null);
+while(!q.empty()){
+Node* t=q.front();
+
+if(t){
+print(t->data);
+while(t){
+if(t->left)
+q.push(t->left);
+if(t->right)q.push(t->right);
+q.pop();
+t=q.front();
+}
+q.push(null);
+}
+q.pop();
+}
+}
+
+
+2) TOP VIEW OF BINARY TREE
+void printTop(Node *root, int dist, int level, auto &map)
+{
+	// base case: empty tree
+	if (root == nullptr)
+		return;
+
+	// if current level is less than maximum level seen so far
+	// for the same horizontal distance or horizontal distance
+	// is seen for the first time, update the map
+	if (map.find(dist) == map.end() || level < map[dist].second)
+	{
+		// update value and level for current distance
+		map[dist] = { root->key, level };
+	}
+
+	// recur for left subtree by decreasing horizontal distance and
+	// increasing level by 1
+	printTop(root->left, dist - 1, level + 1, map);
+
+	// recur for right subtree by increasing both level and
+	// horizontal distance by 1
+	printTop(root->right, dist + 1, level + 1, map);
+}
+
+// Function to print the top view of given binary tree
+void printTop(Node *root)
+{
+	// create an empty map where
+	// key -> relative horizontal distance of the node from root node and
+	// value -> pair containing node's value and its level
+	map<int, pair<int, int>> map;
+
+	// do pre-order traversal of the tree and fill the map
+	printTop(root, 0, 0, map);
+
+	// traverse the map and print top view
+	 for (auto it: map)
+		cout << it.second.first << " ";
+}
+
+
+3) Bottom View
+same as top view but add in map when map[hd].second<level;
+
+4) level oreder traversal.
+        vector<vector<int>> res;
+        if(root==NULL)return res;
+        queue<TreeNode*> q;
+        q.push(root);
+        q.push(NULL);
+        while(!q.empty()){
+            TreeNode* t=q.front();
+            vector<int> res1;
+            if(t){
+                while(!t==NULL){
+                res1.push_back(t->val);
+                if(t->left)q.push(t->left);
+                if(t->right)q.push(t->right);
+                
+                q.pop();
+                t=q.front();
+          }
+                res.push_back(res1);
+                q.push(NULL);
+            }
+            q.pop();
+        }
+        return res;
+    }
+
+5) SPIRAL LEVEL ORDER
+
+6)     Populate Next Right pointers of Tree 
+
+  ou are given a perfect binary tree where all leaves are on the same level, and every parent has two children. The binary tree has the following definition:
+
+struct Node {
+  int val;
+  Node *left;
+  Node *right;
+  Node *next;
+}
+Populate each next pointer to point to its next right node. If there is no next right node, the next pointer should be set to NULL.
+
+Initially, all next pointers are set to NULL.
+
+
+    Node* connect(Node* root) {
+        if(root==NULL)return root;
+        queue<Node*> q;
+        q.push(root);
+        q.push(NULL);
+        Node* prev=root;
+        while(!q.empty()){
+            Node* t=q.front();
+            
+            if(t){
+               while(t!=NULL){
+                if(t->left){
+                    q.push(t->left);
+                }
+                   if(t->right)q.push(t->right);
+                  prev=t; 
+                   q.pop();
+                   t=q.front();
+                   prev->next=t;
+               } 
+                q.push(NULL);
+            }
+            q.pop();
+        }
+        return root;
+    }
+} 
+O(1) soln->
+ public: void helper(Node* root){
+        if(root==NULL||root->left==NULL||root->right==NULL){
+            return;
+        }
+        root->left->next=root->right;
+        if(root->next!=NULL){
+            root->right->next=root->next->left;
+        }
+        helper(root->left);
+        helper(root->right);
+    }
+public:
+    Node* connect(Node* root) {
+        if(root==NULL)return root;
+        helper(root);
+        return root;}
+
+ 

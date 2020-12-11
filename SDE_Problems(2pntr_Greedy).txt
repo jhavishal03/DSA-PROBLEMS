@@ -1,0 +1,68 @@
+        Two Pointers
+1)
+Merge Two Sorted Linked List
+one way is same as to merge as array
+recursive sol-
+if(a.data<=b.data) res.next=merge(a.next,b);
+else res.next=merge(a,b.next);
+
+2) 3 sum
+Hashing
+2 ptrs
+
+
+4) trapping Rain Water
+ Input: [0,1,0,2,1,0,1,3,2,1,2,1]
+Output: 6
+
+soln
+int trap(vector<int>& a) {
+        if(a.size()<=2)return 0;
+        int lb=0,rb=0;
+        int lo=0,hi=a.size()-1;
+        int res=0;
+        while(lo<=hi){
+            if(a[lo]<a[hi]){
+                if(a[lo]>lb){
+                    lb=a[lo];
+                }
+                else{
+                    res+=lb-a[lo];
+                }
+                lo++;
+            }
+            else{
+                if(a[hi]>rb){
+                    rb=a[hi];
+                }
+                else{
+                   res+=rb-a[hi];
+                }
+                    hi--;
+            }
+        }
+        return res;
+    }
+https://www.geeksforgeeks.org/trapping-rain-water/
+
+
+5) Remove Duplicates from Sorted Array
+public int removeDuplicates(int[] nums) {
+        int n=nums.length,j=0;
+        if(n<=1)return n;
+        for(int i=0;i<n-1;i++){
+            if(nums[i]!=nums[i+1]){
+                nums[j++]=nums[i];
+            }
+        }
+        nums[j++]=nums[n-1];
+        return j;
+    }
+6)
+MAX CONTIGOUS NUMBER OF 1's
+
+same as kadane
+
+    GREEDY PROBLEMS
+1)
+ 

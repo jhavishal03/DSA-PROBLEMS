@@ -1,0 +1,539 @@
+
+                                HASHING
+  1
+        2-SUM PROBLEM---
+
+
+  Input: nums = [2,7,11,15], target = 9
+Output: [0,1]
+Output: Because nums[0] + nums[1] == 9, we return [0, 1].
+
+Soln-1  make every pair and compare sum---N^2
+  2 Sort and use two pointer technique ---NlogN
+ optmz soln -- use hashmap as key=a[i],value=index
+      public int[] twoSum(int[] nums, int target) {
+        HashMap<Integer,Integer> map=new HashMap<>();
+        int[] res=new int[2];
+        for(int i=0;i<nums.length;i++){
+            int k=target-nums[i];
+            if(map.containsKey(k)){
+                res[0]=map.get(k);
+                res[1]=i;
+                break;
+            }
+            else{
+                map.put(nums[i],i);
+            }
+        }
+        return res;
+    }
+
+2 4 Sum problem
+public:
+    vector<vector<int>> fourSum(vector<int>& a, int tar) {
+        vector<vector<int>> res;
+        int n=a.size();
+        if(n<4)return res;
+        unordered_map<int,pair<int,int>> m;
+        for(int i=0;i<n-1;i++){
+            for(int j=i+1;j<n;j++)
+                m[a[i]+a[j]]={i,j};
+        }
+        set<vector<int>> s;
+         for(int i=0;i<n-1;i++){
+             vector<int> temp(4);
+             for(int j=i+1;j<n;j++){
+                 int sum=a[i]+a[j];
+                 if(m.find(tar-sum)!=m.end()){
+                     pair<int,int> p=m[tar-sum];
+                     if(p.first!=i&&p.first!=j&&p.second!=i&&p.second!=j){
+                         temp[0]=(a[i]);
+                           temp[1]=(a[j]);
+                           temp[2]=(a[p.first]);
+                           temp[3]=(a[p.second]);
+                         sort(temp.begin(),temp.end());
+                  s.insert(temp);
+                     }
+                     else{
+                         continue;
+                     }
+                 }
+             }
+             
+         }
+        for(auto it=s.begin();it!=s.end();it++){
+            
+            res.push_back(*it);
+        }
+    return res;
+    }
+
+
+3)
+ Longest Subarray with 0 Sum
+     Find the largest continuous sequence in a array which sums to zero.
+
+Example:
+
+
+Input:  {1 ,2 ,-2 ,4 ,-4}
+Output: {2 ,-2 ,4 ,-4}
+
+ NOTE : If there are multiple correct answers, return the sequence which occurs first in the array
+
+ optmz Soln
+ vector<int> Solution::lszero(vector<int> &a) {
+  unordered_map<int,int> m;
+  int sum=0;
+  vector<int> res;
+  int maxlen=INT_MIN,en=0,in=0;
+  for(int i=0;i<a.size();i++){
+      sum+=a[i];
+      if(sum==0){
+          if(i+1>maxlen){
+              maxlen=i+1;
+              in=0;
+              en=i;
+          }
+      }
+      else if(m.find(sum)!=m.end()){
+          if(i-m[sum]>maxlen){
+              maxlen=i-m[sum];
+              in=m[sum]+1;
+              en=i;
+          }
+      }
+      else{
+          m[sum]=i;
+      }
+  }
+if(maxlen==INT_MIN)return {};
+  for(int i=in;i<=en;i++){
+      res.push_back(a[i]);
+  }
+    return res;
+}
+
+4)  Longest Consecutive Subsequence
+
+ Given an unsorted array of integers, find the length of the longest consecutive elements sequence.
+
+Your algorithm should run in O(n) complexity.
+
+Example:
+
+Input: [100, 4, 200, 1, 3, 2]
+Output: 4
+Explanation: The longest consecutive elements sequence is [1, 2, 3, 4]. Therefore its length is 4.
+
+soln     int Solution::longestConsecutive(const vector<int> &A) {
+    // Do not write main() function.
+    // Do not read input, instead use the arguments to the function.
+    // Do not print the output, instead return values as specified
+    // Still have a doubt. Checkout www.interviewbit.com/pages/sample_codes/ for more details
+    unordered_set<int> hash;
+    for(int i=0;i<A.size();i++){
+        hash.insert(A[i]);
+    }
+    int l=1;
+    int maxl=1;
+    for(int i=0;i<A.size();i++){
+        int j=1;
+        l=1;
+        if(hash.find(A[i]-1)==hash.end()){
+            while(hash.find(A[i]+j)!=hash.end()){
+                // h.insert(A[i]+j);
+                j++;
+                l++;
+            }
+            if(l>maxl){
+                maxl=l;
+            }
+        }
+    }
+    return maxl;
+}
+
+5) Count number of subarrays with given XOR
+  https://www.geeksforgeeks.org/count-number-subarrays-given-xor/
+
+6) Longest Sub string Without Repeat
+  
+int lengthOfLongestSubstring(string s) {
+        int n=s.length();
+        if(n<=1)return n;
+        unordered_set<char> us;
+        int i=0,j=0,res=INT_MIN;
+        while(i<n){
+            if(us.find(s[i])!=us.end()){
+                us.erase(s[j]);
+                j++;
+            }
+            else{
+                us.insert(s[i]);
+                res=max(res,i-j+1);
+                i++;
+            }
+        }
+        return res;
+
+
+
+
+         Linked List
+ 1)
+  reverse a linked List
+  iterative app-
+  Node* rev(Node* head){
+  Node* curr=head,*next=NULL,*prev=NULL;
+  while(!curr->next){
+  next=curr->next;
+  curr->next=prev;
+  prev=curr;
+  curr=next;
+  }
+   head=prev;
+  return head;
+   }
+
+// RECUSIVE APPROACH
+void reverse(Node** head) 
+{ 
+    if (!head) 
+        return; 
+    reverseUtil(*head, NULL, head); 
+} 
+  
+// A simple and tail recursive function to reverse 
+// a linked list.  prev is passed as NULL initially. 
+void reverseUtil(Node* curr, Node* prev, Node** head) 
+{ 
+    /* If last node mark it head*/
+    if (!curr->next) { 
+        *head = curr; 
+  
+        /* Update next to prev node */
+        curr->next = prev; 
+        return; 
+    } 
+  
+    /* Save curr->next node for recursive call */
+    Node* next = curr->next; 
+  
+    /* and update next ..*/
+    curr->next = prev; 
+  
+    reverseUtil(next, curr, head); 
+} 
+  
+
+2 Find Middle Of linked List
+  i/p  head->1->2->3->4->5->NULL
+o/p middle ele- 3
+  optmz soln- fast and slow ptr
+  Node* findMid(Node* head){
+  Node* slow=head,*fast=head;
+  while(!fast&&!fast->next){
+  fast=fast->next->next;
+  slow=slow->next;
+}
+return slow;
+}  
+
+4  ADD TWO NUMBERS
+  i/p l1= 2->5->7->NULL l2= 3->5->5->NULL;
+  o/p  5->0->3->1->NULL
+   
+           if(A == NULL){
+        return B;
+    }
+    else if(B == NULL){
+        return A;
+    }
+    
+    // reversing the list
+    
+    ListNode* currA = A;
+    ListNode* currB = B;
+    
+    ListNode* ans = NULL;
+    ListNode* head;
+    
+    int sum, carry = 0, value;
+    while(currA != NULL && currB != NULL){
+        sum = currA->val + currB->val + carry;
+        carry = sum/10;
+        value = sum%10;
+        
+        ListNode* store = new ListNode(value);
+        
+        if(ans == NULL){
+            ans = store;
+            head = ans;
+        }
+        else{
+            ans->next = store;
+            ans = store;
+        }
+        currA = currA->next;
+        currB = currB->next;
+    }
+    
+    if(currA == NULL){
+        while(currB != NULL){
+            sum = currB->val + carry;
+            carry = sum/10;
+            value = sum%10;
+            
+            ListNode* store = new ListNode(value);
+            
+            ans->next = store;
+            ans = store;
+            
+            currB = currB->next;
+        }
+    }
+    else if(currB == NULL){
+        while(currA != NULL){
+            sum = currA->val + carry;
+            carry = sum/10;
+            value = sum%10;
+            
+            ListNode* store = new ListNode(value);
+            
+            ans->next = store;
+            ans = store;
+            
+            currA = currA->next;
+        }
+    }
+    
+    if(carry != 0){
+        ListNode* store = new ListNode(carry);
+        
+        ans->next = store;
+        ans = store;
+    }
+
+    return head;
+        
+  5) Find Intersection Point in Link list
+
+  ListNode *getIntersectionNode(ListNode *a, ListNode *b) {
+        if(a==NULL||b==NULL)return NULL;
+        unordered_set<ListNode*> s;
+        ListNode* p1=a,*p2=b;
+        while(p1!=NULL){
+            s.insert(p1);
+            p1=p1->next;
+        }
+        while(p2!=NULL){
+            if(s.find(p2)!=s.end()){
+                return p2;
+            }
+            p2=p2->next;
+        }
+        return NULL;
+    }
+
+ 6)  Check if a LinkedList is palindrome or not
+   /**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+    public: void rev(ListNode** head_ref){
+        ListNode* current=*head_ref,*prev=NULL,*next;
+        
+        while (current != NULL) {  
+        next = current->next;  
+        current->next = prev;  
+        prev = current;  
+        current = next;  
+    }  
+    *head_ref = prev;
+    }
+    public:
+          bool comp(ListNode* head1,ListNode* head2){
+             ListNode* temp1=head1,*temp2=head2;
+              while (temp1 && temp2) {  
+        if (temp1->val == temp2->val) {  
+            temp1 = temp1->next;  
+            temp2 = temp2->next;  
+        }  
+        else
+            return 0;  
+    }  
+  
+    /* Both are empty reurn 1*/
+    if (temp1 == NULL && temp2 == NULL)  
+        return 1;  
+  
+    /* Will reach here when one is NULL  
+    and other is not */
+    return 0;
+          }
+public:
+    bool isPalindrome(ListNode* head) {
+     if(head==NULL||head->next==NULL)return 1;
+        ListNode* slow=head,*fast=head;
+        ListNode* b=NULL,*mid=NULL,*tail=head;
+        while(fast!=NULL&&fast->next!=NULL){
+            fast=fast->next->next;
+            tail=slow;
+            slow=slow->next;
+        }
+        if(fast!=NULL){
+            mid=slow;
+           slow=slow->next;
+        }
+        b=slow;
+        tail->next=NULL;
+        rev(&b);
+     bool res=comp(head,b);
+        rev(&b);
+        if(mid!=NULL){
+            tail->next=mid;
+            mid->next=slow;
+        }
+        tail->next=slow;
+        return res;
+    }
+};
+O(1) space and O(n) time complexity
+
+7) REVERSE LINKEDLIST IN GROUP OF K
+   i/p 1 2 3 4 5 6 7 8   k=3
+   o/p 3 2 1 6 5 4 7 8
+  optm soln
+
+
+  public:
+          bool getcount(ListNode* head,int k){
+            ListNode* ptr=head;
+              int c=0;
+              while(ptr!=NULL&&c<k){
+                  ptr=ptr->next;
+                  c++;
+              }
+              return c==k?true:false;
+          }
+public:
+    ListNode* reverseKGroup(ListNode* head, int k) {
+        if(head==NULL)return head;
+        ListNode* curr=head,*prev=NULL,*next=NULL;
+        int count=0;
+        
+        bool gc=getcount(head,k);
+        if(gc==false)return head;
+        
+        while(curr!=NULL&&count<k){
+            next=curr->next;
+            curr->next=prev;
+            prev=curr;
+            curr=next;
+            count++;
+        }
+            
+        if(next!=NULL)
+            head->next=reverseKGroup(next,k);
+        
+        
+        return prev;
+    }
+
+8) Found and Remove Loop In LINKED LIST.
+  https://www.geeksforgeeks.org/detect-and-remove-loop-in-a-linked-list/
+9) Flattening a Linked List
+Input: 
+5 -> 10 -> 19 -> 28
+|    |     |     |
+V    V     V     V
+7    20    22    35
+|          |     |
+V          V     V
+8          50    40
+|                |
+V                V
+30               45
+
+Output: 5->7->8->10->19->20->22->28->30->35->40->45->50
+
+Node* flatten(Node* root) 
+{ 
+    Node* ptr = root; 
+    Node* head = NULL; 
+  
+    // Min Heap which will return 
+    // smallest element currently 
+    // present in heap 
+    priority_queue<Node*, 
+                   vector<Node*>, 
+                   compare> 
+        pq; 
+  
+    // Push the head nodes of each 
+    // downward linked list 
+    while (ptr != NULL) { 
+        pq.push(ptr); 
+        ptr = ptr->right; 
+    } 
+  
+    // This loop will execute 
+    // till the map becomes empty 
+    while (!pq.empty()) { 
+  
+        // Pop out the node that 
+        // contains element 
+        // currently in heap 
+        Node* temp = pq.top(); 
+        pq.pop(); 
+  
+        // Push the next node pointed by 
+        // the current node into heap 
+        // if it is not null 
+        if (temp->down != NULL) { 
+            pq.push(temp->down); 
+        } 
+  
+        // Create new linked list 
+        // that is to be returned 
+        if (head == NULL) { 
+            head = temp; 
+            ptr = temp; 
+        } 
+        else { 
+            ptr->down = temp; 
+            ptr = temp; 
+        } 
+    } 
+  
+    // Pointer to head node 
+    // in the linked list 
+    return head; 
+}
+
+10) ROTATE LINKED LIST
+    ListNode* rotateRight(ListNode* head, int k) {
+        ListNode* prev=head;
+        int len;
+        while(prev->next!=NULL){
+            len++;
+            prev=prev->next;
+        }
+   prev->next=head;
+        prev=head;
+        for(int i=1;i<len-k%len;i++){
+            prev=prev->next;
+        }
+        head=prev->next;
+        prev->next=NULL;
+    return head;
+    }
+https://www.geeksforgeeks.org/rotate-a-linked-list/

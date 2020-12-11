@@ -1,0 +1,67 @@
+1) Maximum sum path bw two leafes  TREE
+https://practice.geeksforgeeks.org/problems/maximum-path-sum/1
+soln
+int msum;
+int getmax(Node* root){
+    if(root==NULL)return 0;
+    if(root->left==NULL&&root->right==NULL)return root->data;
+    
+    int ls=getmax(root->left);
+    int rs=getmax(root->right);
+    if(root->left!=NULL&&root->right!=NULL){
+        int tsum=root->data+ls+rs;
+        msum=max(msum,tsum);
+        return max(ls,rs)+root->data;
+    }
+    if(root->left==NULL)return root->data+getmax(root->right);
+    return root->data+getmax(root->left);
+}
+2) 
+MInimum Light to Activate Bulbs
+https://www.interviewbit.com/problems/minimum-lights-to-activate/
+Solution
+int Solution::solve(vector<int> &v, int k) 
+{
+    int n=v.size();
+    int ans=0;
+    for(int i=0; i<n;i++)
+    {
+        int flag=0;
+        for(int j=i+k-1; j>=i-k+1; j--)
+        {
+            if(v[j]==1){
+                ans++;
+                flag=1;
+                i= j+k-1;
+                break;
+            }
+        }
+        if(!flag) return -1;
+        
+    }
+    return ans;
+}
+
+ 3) Populating Next Right Pointer in each Node
+ https://leetcode.com/problems/populating-next-right-pointers-in-each-node-ii/
+   Node* fn(Node* root){
+        while(root && !root->right && !root->left){
+            root=root->next;
+        }
+        if(root)return root->left?root->left:root->right;
+        return NULL;
+    }
+    
+    Node* connect(Node* root) {
+        if(!root)return root ;
+        if(root->left){
+            if(root->right)root->left->next=root->right;
+            else root->left->next=fn(root->next);
+        }
+        if(root->right){
+            root->right->next=fn(root->next);
+        }
+        connect(root->right);
+        connect(root->left);
+   return root;
+    }
