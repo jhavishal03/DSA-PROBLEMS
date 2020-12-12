@@ -65,3 +65,37 @@ int Solution::solve(vector<int> &v, int k)
         connect(root->left);
    return root;
     }
+3) Smallest Subtree with all the Deepest Nodes
+https://leetcode.com/problems/smallest-subtree-with-all-the-deepest-nodes/
+ Solution {
+public:
+    int h=0;
+    int maxdepth(TreeNode* root){
+        if(root==NULL)return 0;
+        
+        int lh=maxdepth(root->left);
+        
+        int rh=maxdepth(root->right);
+        
+        return max(lh,rh)+1;
+    }
+    TreeNode* solve(TreeNode* root,int ch){
+        if(root==NULL||ch==h){
+            return root;
+        }
+        TreeNode* l=NULL,*r=NULL;
+        l=solve(root->left,1+ch);
+        r=solve(root->right,1+ch);
+        if(l!=NULL&&r!=NULL)return root;
+        if(l!=NULL)return l;
+        if(r!=NULL)return r;
+        return NULL;
+    }
+    TreeNode* subtreeWithAllDeepest(TreeNode* root) {
+        if(root==NULL)return root;
+        h=maxdepth(root);
+        // h->max depth
+        return solve(root,1);
+    }
+};
+  
